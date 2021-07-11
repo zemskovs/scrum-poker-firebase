@@ -6,18 +6,26 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+const ENV = {
+  production: 'production',
+  development: 'development',
+};
+const isProd = process.env.NODE_ENV === ENV.production;
+const isDev = !isProd;
+
 const config = {
+  mode: isProd ? ENV.production : ENV.development,
   entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[contenthash].js'
+    filename: '[name].[contenthash].js',
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         use: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
       {
         test: /\.css$/,
@@ -26,20 +34,20 @@ const config = {
           {
             loader: 'css-loader',
             options: {
-              importLoaders: 1
-            }
+              importLoaders: 1,
+            },
           },
-          'postcss-loader'
-        ]
+          'postcss-loader',
+        ],
       },
       {
         test: /\.ts(x)?$/,
         loader: 'ts-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
       {
         test: /\.svg$/,
-        use: 'file-loader'
+        use: 'file-loader',
       },
       {
         test: /\.png$/,
@@ -47,20 +55,15 @@ const config = {
           {
             loader: 'url-loader',
             options: {
-              mimetype: 'image/png'
-            }
-          }
-        ]
-      }
-    ]
+              mimetype: 'image/png',
+            },
+          },
+        ],
+      },
+    ],
   },
   resolve: {
-    extensions: [
-      '.js',
-      '.jsx',
-      '.tsx',
-      '.ts'
-    ]
+    extensions: ['.js', '.jsx', '.tsx', '.ts'],
   },
   plugins: [
     // new CopyPlugin({
@@ -68,9 +71,9 @@ const config = {
     // }),
     new HtmlWebpackPlugin({
       appMountId: 'app',
-      filename: 'index.html'
+      template: 'index.html',
     }),
-    new LodashModuleReplacementPlugin,
+    new LodashModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin(),
   ],
@@ -81,11 +84,14 @@ const config = {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          chunks: 'all'
-        }
-      }
-    }
-  }
+          chunks: 'all',
+        },
+      },
+    },
+  },
+  devServer: {
+    contentBase: './dist',
+  },
 };
 
 module.exports = config;
