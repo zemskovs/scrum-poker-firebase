@@ -1,8 +1,10 @@
 import * as React from 'react';
-import Button from '@material-ui/core/Button';
 import firebase from 'firebase/app';
+import { Provider } from 'react-redux';
 
 import { firebaseConfig } from './configs';
+import store from './store';
+import LogInPage from './pages/LogIn';
 
 const app = firebase.initializeApp(firebaseConfig);
 
@@ -10,16 +12,12 @@ interface Props {
   name: string;
 }
 
-class App extends React.Component<Props> {
-  render() {
-    const { name } = this.props;
-    return (
-      <>
-        <h1>Hello {name}</h1>
-        <Button variant="contained">this is a material UI button</Button>
-      </>
-    );
-  }
-}
+const App: React.FC<Props> = () => {
+  return (
+    <Provider store={store}>
+      <LogInPage />
+    </Provider>
+  );
+};
 
 export default App;
