@@ -1,5 +1,5 @@
 const firebaseConfig = {
-  apiKey: 'AIzaSyDySGmroucLPbR1qqYjtIgc1iwnfRBRS6c',
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: 'scrum-poker-80505.firebaseapp.com',
   projectId: 'scrum-poker-80505',
   storageBucket: 'scrum-poker-80505.appspot.com',

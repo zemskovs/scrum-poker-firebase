@@ -1,5 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
+const fs = require('fs');
+const dotenv = require('dotenv');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
@@ -10,11 +12,15 @@ const ENV = {
   production: 'production',
   development: 'development',
 };
-const isProd = process.env.NODE_ENV === ENV.production;
+const currentEnv = process.env.NODE_ENV;
+const envBuffer = fs.readFileSync(`./.env.${currentEnv}`);
+const envConfig = dotenv.parse(envBuffer);
+
+const isProd = currentEnv === ENV.production;
 const isDev = !isProd;
 
 const config = {
-  mode: isProd ? ENV.production : ENV.development,
+  mode: currentEnv,
   entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -76,6 +82,11 @@ const config = {
     new LodashModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        FIREBASE_API_KEY: JSON.stringify(envConfig.FIREBASE_API_KEY),
+      },
+    }),
   ],
   optimization: {
     runtimeChunk: 'single',
