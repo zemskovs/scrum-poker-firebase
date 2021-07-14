@@ -8,11 +8,7 @@ import LogInPage from './pages/LogIn';
 
 const app = firebase.initializeApp(firebaseConfig);
 
-interface Props {
-  name: string;
-}
-
-const App: React.FC<Props> = () => {
+const App: React.FC = () => {
   return (
     <Provider store={store}>
       <LogInPage />
